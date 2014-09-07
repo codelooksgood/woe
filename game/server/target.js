@@ -28,18 +28,13 @@ Target.prototype.move = function() {
 
 	this.x = 0.02 * this.progress;
 	this.y = this.baseY + this.rand1 * Math.sin(this.rand2 * this.progress);
-	if (this.x < 1) {
-		setTimeout(this.move.bind(this), 25);
-	}
-	else {
+	if (this.x > 1) {
 		var index = this.room.targets.indexOf(this);
 		if (index >= 0) {
 			this.room.targets.splice(index, 1);
 			Target.new(this.room);
 		}
 	}
-
-	this.room.updateHosts();
 };
 
 Target.prototype.info = function () {

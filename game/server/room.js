@@ -6,6 +6,8 @@ var Room = function(id) {
 	this.points = [];
 	this.targets = [];
 	this.hosts = [];
+
+	this.tick();
 };
 
 Room.prototype.info = function() {
@@ -20,7 +22,6 @@ Room.prototype.info = function() {
 
 Room.prototype.addTarget = function(target) {
 	this.targets.push(target);
-	this.updateHosts();
 };
 
 Room.prototype.updateHosts = function() {
@@ -34,6 +35,14 @@ Room.prototype.emitToHosts = function() {
 	this.hosts.forEach(function(hostSocket) {
 		hostSocket.emit.apply(hostSocket, args);
 	}, this);
+};
+
+Room.prototype.tick = function() {
+	this.targets.forEach(function(target) {
+		target.move();
+	});
+	this.updateHosts();
+	setTimeout(this.tick.bind(this), 25);
 };
 
 module.exports = Room;

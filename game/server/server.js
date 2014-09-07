@@ -57,12 +57,10 @@ io.on("connection", function(socket) {
 
 		var point = new Point();
 		room.points.push(point);
-		room.updateHosts();
 
 		socket.on("move", function(x, y) {
 			point.x -= x;
 			point.y -= y;
-			room.updateHosts();
 		});
 		socket.on("fire", function(id) {
 			room.points.forEach(function(point) {
@@ -86,11 +84,9 @@ io.on("connection", function(socket) {
 					});
 				}
 			});
-			room.updateHosts();
 		});
 		socket.on("disconnect", function() {
 			room.points.splice(room.points.indexOf(point), 1);
-			room.updateHosts();
 		});
 		socket.emit("clientId", point.id);
 	});
@@ -113,7 +109,6 @@ io.on("connection", function(socket) {
 				imageSize: IMAGE_SIZE
 			});
 			room.hosts.push(socket);
-			socket.emit("update", room.info());
 		}
 	});
 });
