@@ -1,5 +1,5 @@
 {
   "name": "shootyfruitty",
-  "main": "server.js",
+  "main": "server/server.js",
   "author": "codelooksgood"
 }
