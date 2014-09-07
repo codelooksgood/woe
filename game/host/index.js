@@ -3,13 +3,6 @@
 
 	// helper
 
-	// QRCode
-	new QRCode(document.getElementById("qrcode"), {
-		text: window.location.href.replace("/host", "/client"),
-		width: 120,
-		height: 120
-	});
-
 	// constants
 	var FONT_SIZE = 20;
 	var DEFAULT_MARGIN = 10;
@@ -78,7 +71,8 @@
 	};
 
 	// socket.io
-	var socket = io(window.location.href);
+	console.log("[index.js: 74]\n   ");
+	var socket = io();
 
 	socket.on("update", function(room) {
 		points = room.points;
@@ -96,7 +90,7 @@
 	});
 
 	socket.on("connect", function() {
-		socket.emit("id", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
+		socket.emit("host", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
 	});
 
 	// events
@@ -106,5 +100,5 @@
 	});
 
 	// initial draw
-	//draw();
+	draw();
 })();

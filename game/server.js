@@ -23,6 +23,7 @@ var Room = function(id) {
 	this.id = Math.floor(Math.random() * 9000 + 1000).toString();
 	this.points = [];
 	this.targets = [];
+	this.hosts = [];
 };
 
 Room.prototype.info = function() {
@@ -45,7 +46,16 @@ Room.prototype.newTarget = function() {
 };
 
 Room.prototype.updateHosts = function() {
-	io.of("/host/").in(this.id).emit("update", this.info());
+	this.hosts.forEach(function(hostSocket) {
+		hostSocket.emit("update", this.info());
+	}, this);
+};
+
+Room.prototype.emitToHosts = function() {
+	var args = arguments;
+	this.hosts.forEach(function(hostSocket) {
+		hostSocket.emit.apply(hostSocket, args);
+	}, this);
 };
 
 // Point
@@ -114,13 +124,19 @@ Target.prototype.info = function () {
 };
 
 // socket.io
+io.on("connection", function(socket) {
+	socket.on("newRoom", function() {
+		var room = new Room();
+		for (var i = 0; i < 5; i++) {
+			setTimeout(room.newTarget.bind(room), i * 2000);
+		}
+		rooms.push(room);
+		socket.emit("room", room.info());
+	});
 
-io.of("/client/").on("connection", function(socket) {
-	"use strict";
-
-	console.log("client connected");
-
-	socket.on("id", function(id) {
+	// client
+	socket.on("client", function(id) {
+		console.log("[server.js: 132]\n   ", "client connected");
 		var room = null;
 		for (var i = 0; i < rooms.length; i++) {
 			if (rooms[i].id === id) {
@@ -147,7 +163,7 @@ io.of("/client/").on("connection", function(socket) {
 				if (point.id === id) {
 					var x = point.x + POINT_SIZE.WIDTH / 2;
 					var y = point.y + POINT_SIZE.HEIGHT / 2;
-					io.of("/host/").in(room.id).emit("fired", {
+					room.emitToHosts("fired", {
 						x: x,
 						y: y,
 						point: point,
@@ -170,16 +186,12 @@ io.of("/client/").on("connection", function(socket) {
 			room.points.splice(room.points.indexOf(point), 1);
 			room.updateHosts();
 		});
-		socket.emit("id", point.id);
+		socket.emit("clientId", point.id);
 	});
-});
 
-io.of("/host/").on("connection", function(socket) {
-	"use strict";
-
-	console.log("host connected");
-
-	socket.on("id", function(id) {
+	// host
+	socket.on("host", function(id) {
+		console.log("[server.js: 186]\n   ", "host connected");
 		var room = null;
 		for (var i = 0; i < rooms.length; i++) {
 			if (rooms[i].id === id) {
@@ -194,18 +206,8 @@ io.of("/host/").on("connection", function(socket) {
 				pointSize: POINT_SIZE,
 				imageSize: IMAGE_SIZE
 			});
+			room.hosts.push(socket);
 			socket.emit("update", room.info());
 		}
-	});
-});
-
-io.on("connection", function(socket) {
-	socket.on("newRoom", function() {
-		var room = new Room();
-		for (var i = 0; i < 5; i++) {
-			setTimeout(room.newTarget.bind(room), i * 2000);
-		}
-		rooms.push(room);
-		socket.emit("room", room.info());
 	});
 });

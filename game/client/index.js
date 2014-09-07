@@ -19,13 +19,13 @@
 	var lastFire = 0;
 
 	// socket.io
-	var socket = io(window.location.href);
+	var socket = io();
 
 	socket.on("connect", function() {
-		socket.emit("id", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
+		socket.emit("client", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
 	});
 
-	socket.on("id", function(id) {
+	socket.on("clientId", function(id) {
 		clientId = id;
 	});
 
