@@ -71,7 +71,6 @@
 	};
 
 	// socket.io
-	console.log("[index.js: 74]\n   ");
 	var socket = io();
 
 	socket.on("update", function(room) {

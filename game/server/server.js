@@ -25,6 +25,12 @@ var rooms = [];
 // socket.io
 io.on("connection", function(socket) {
 	// start
+	socket.on("requestCurrentRooms", function() {
+		socket.emit("currentRooms", rooms.map(function(room) {
+			return room.info();
+		}));
+	});
+
 	socket.on("newRoom", function() {
 		var room = new Room();
 		for (var i = 0; i < 5; i++) {
