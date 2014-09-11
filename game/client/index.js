@@ -29,6 +29,11 @@
 		clientId = id;
 	});
 
+	socket.on("roomFull", function(id) {
+		window.alert("No slots available.");
+		window.history.back();
+	});
+
 	// events
 	addEventListener([document.body], ["mousedown", "touchstart"], function(event) {
 		downStart = Date.now();

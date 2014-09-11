@@ -42,7 +42,6 @@ io.on("connection", function(socket) {
 
 	// client
 	socket.on("client", function(id) {
-		console.log("[server.js: 132]\n   ", "client connected");
 		var room = null;
 		for (var i = 0; i < rooms.length; i++) {
 			if (rooms[i].id === id) {
@@ -55,8 +54,15 @@ io.on("connection", function(socket) {
 			return;
 		}
 
+		if (room.points.length >= 4) {
+			socket.emit("roomFull");
+			return;
+		}
+
 		var point = new Point();
 		room.points.push(point);
+
+		console.log("[server.js: 132]\n   ", "client connected to room", room.id);
 
 		socket.on("move", function(x, y) {
 			point.x -= x;
