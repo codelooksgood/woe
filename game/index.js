@@ -7,22 +7,26 @@
 	});
 
 	socket.on("currentRooms", function(rooms) {
-		console.log("[index.js: 10]\n   ", rooms);
 		var roomsHTML = "";
-		rooms.forEach(function(room) {
-			roomsHTML += "<button id=" + room.id + ">" + room.id + "</room>";
+		rooms.sort(function(room1, room2) {
+			return room1.id > room2.id;
+		}).forEach(function(room) {
+			var openSlots = 4 - room.points.length;
+			roomsHTML += "<button id=" + room.id + " " + (openSlots === 0 ? "disabled" : "") + ">Host " + room.id + " (" + openSlots + " open slots)" + "</room>";
 		});
 
-		document.body.innerHTML = roomsHTML + document.body.innerHTML;
+		document.body.innerHTML += roomsHTML;
 	});
 
 	document.addEventListener("click", function(event) {
-		if (event.target.id === "newRoom") {
-			socket.emit("newRoom");
-		}
-		// existing room
-		else {
-			window.location.href += "client/index.html?id=" + event.target.id
+		if (event.target.tagName === "BUTTON") {
+			if (event.target.id === "newRoom") {
+				socket.emit("newRoom");
+			}
+			// existing room
+			else {
+				window.location.href += "client/index.html?id=" + event.target.id;
+			}
 		}
 	});
 
