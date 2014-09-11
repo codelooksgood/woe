@@ -8,7 +8,7 @@
 
 	// set by server
 	var POINT_SIZE = null;
-	var IMAGE_SIZE = null;
+	var TARGET_RADIUS = null;
 
 	// variables
 	var isGameRunning = true;
@@ -17,12 +17,17 @@
 	var points = [];
 	var targets = [];
 	var fires = [];
-	var image = new window.Image();
-	image.src = "apple.png";
 
 	// canvas
-	canvas.width = canvas.parentElement.clientWidth;
-	canvas.height = canvas.parentElement.clientHeight;
+	var resizeCanvas = function() {
+		var min = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
+		canvas.style.height = min + "px";
+		canvas.style.width = min + "px";
+		canvas.width = min;
+		canvas.height = min;
+	};
+	resizeCanvas();
+
 	context.font = FONT_SIZE + "pt Arial";
 	context.textBaseline = "top";
 	context.textAlign = "right";
@@ -52,7 +57,10 @@
 			});
 
 			targets.forEach(function(target) {
-				context.drawImage(image, target.x * canvas.width, target.y * canvas.height, IMAGE_SIZE.WIDTH * canvas.width, IMAGE_SIZE.HEIGHT * canvas.width);
+				context.fillStyle = "rgb(220, 0, 0)";
+				context.beginPath();
+				context.arc(target.x * canvas.width, target.y * canvas.height, TARGET_RADIUS * canvas.width, 0, 2 * Math.PI, false);
+				context.fill();
 			});
 		}
 
@@ -80,7 +88,7 @@
 
 	socket.on("sizes", function(sizes) {
 		POINT_SIZE = sizes.pointSize;
-		IMAGE_SIZE = sizes.imageSize;
+		TARGET_RADIUS = sizes.targetRadius;
 	});
 
 	socket.on("fired", function(fire) {
@@ -106,10 +114,7 @@
 	});
 
 	// events
-	window.addEventListener("resize", function() {
-		canvas.width = canvas.parentElement.clientWidth;
-		canvas.height = canvas.parentElement.clientHeight;
-	});
+	window.addEventListener("resize", resizeCanvas);
 
 	document.getElementById("reset").addEventListener("click", function() {
 		socket.emit("reset");

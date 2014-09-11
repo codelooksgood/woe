@@ -14,10 +14,7 @@ var POINT_SIZE = {
 	HEIGHT: 0.025
 };
 
-var IMAGE_SIZE = {
-	WIDTH: 0.075,
-	HEIGHT: 0.1
-};
+var TARGET_RADIUS = 0.05;
 
 // variables
 var rooms = [];
@@ -78,9 +75,7 @@ io.on("connection", function(socket) {
 						timestamp: new Date().getTime()
 					});
 					room.targets.forEach(function(target) {
-						var targetX = target.x + IMAGE_SIZE.WIDTH / 2;
-						var targetY = target.y + IMAGE_SIZE.HEIGHT / 2;
-						if (Math.abs(targetX - x) < (IMAGE_SIZE.WIDTH + POINT_SIZE.WIDTH) / 2 && Math.abs(targetY - y) < (IMAGE_SIZE.HEIGHT  + POINT_SIZE.HEIGHT) / 2) {
+						if (TARGET_RADIUS > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
 							point.score++;
 							if (point.score >= 10) {
 								room.updateHosts();
@@ -115,7 +110,7 @@ io.on("connection", function(socket) {
 			socket.join(room.id);
 			socket.emit("sizes", {
 				pointSize: POINT_SIZE,
-				imageSize: IMAGE_SIZE
+				targetRadius: TARGET_RADIUS
 			});
 			room.hosts.push(socket);
 		}
