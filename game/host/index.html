@@ -6,7 +6,17 @@
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<canvas id="canvas" class="fullscreen absolute"></canvas>
+		<div class="header">
+			<div class="buttonControl left">
+				<button id="reset">Restart</button>
+			</div>
+			<div id="players" class="playerInfo right">
+
+			</div>
+		</div>
+		<div class="gamefield">
+			<canvas id="canvas" class="fullscreen"></canvas>
+		</div>
 		<script type="text/javascript" src="index.js"></script>
 	</body>
 </html>

@@ -5,7 +5,6 @@
 
 	// constants
 	var FONT_SIZE = 20;
-	var DEFAULT_MARGIN = 10;
 
 	// set by server
 	var POINT_SIZE = null;
@@ -17,7 +16,7 @@
 	var points = [];
 	var targets = [];
 	var fires = [];
-	var image = new Image();
+	var image = new window.Image();
 	image.src = "apple.png";
 
 	// canvas
@@ -54,24 +53,22 @@
 			context.drawImage(image, target.x * canvas.width, target.y * canvas.height, IMAGE_SIZE.WIDTH * canvas.width, IMAGE_SIZE.HEIGHT * canvas.width);
 		});
 
+		document.getElementById("players").innerHTML = "";
+
 		points.sort(function(point1, point2) {
-			return point1.score < point2.score;
+			return point1.id < point2.id;
 		}).forEach(function(point, index) {
 			context.fillStyle = point.color;
 			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE.WIDTH * canvas.width, POINT_SIZE.HEIGHT * canvas.width);
 			// score
-			var y = FONT_SIZE + (FONT_SIZE + 2 * DEFAULT_MARGIN) * index;
-			var width = (canvas.width / 100) * point.score;
-			context.fillRect(canvas.width - (width + DEFAULT_MARGIN), y, width, FONT_SIZE + DEFAULT_MARGIN);
-			context.fillStyle = "rgb(0, 0, 0)";
-			context.fillText(point.score, canvas.width - (FONT_SIZE + DEFAULT_MARGIN), y);
+			document.getElementById("players").innerHTML += "<div class='player'>Player " + (index + 1) + ": " + point.score + "</div>";
 		});
 
-		requestAnimationFrame(draw);
+		window.requestAnimationFrame(draw);
 	};
 
 	// socket.io
-	var socket = io();
+	var socket = window.io();
 
 	socket.on("update", function(room) {
 		points = room.points;
@@ -89,7 +86,17 @@
 	});
 
 	socket.on("connect", function() {
-		socket.emit("host", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
+		socket.emit("host", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20")) || null);
+	});
+
+	socket.on("winner", function(id) {
+		var winnerIndex = points.map(function(point) {
+			return point.id;
+		}).indexOf(id);
+
+		context.textAlign = "center";
+		context.fillText("Congratulation Player " + (winnerIndex + 1) + "!", canvas.width / 2, canvas.height / 2);
+
 	});
 
 	// events
@@ -97,6 +104,10 @@
 		canvas.width = canvas.parentElement.clientWidth;
 		canvas.height = canvas.parentElement.clientHeight;
 	});
+
+	document.getElementById("reset").addEventListener("click", function() {
+		socket.emit("reset");
+	}, false);
 
 	// initial draw
 	draw();
