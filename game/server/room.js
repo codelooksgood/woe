@@ -3,7 +3,7 @@
 
 var Target = require("./target");
 
-var Room = function(id) {
+var Room = function() {
 	this.id = Math.floor(Math.random() * 9000 + 1000).toString();
 	this.points = [];
 	this.targets = [];
@@ -61,11 +61,11 @@ Room.prototype.stop = function() {
 };
 
 Room.prototype.reset = function() {
-	room.points.forEach(function(point) {
+	this.points.forEach(function(point) {
 		point.score = 0;
 	});
-	room.targets = [];
-	room.fill();
+	this.targets = [];
+	this.fill();
 	if (this.stopped) {
 		this.stopped = false;
 		this.tick();

@@ -83,6 +83,7 @@ io.on("connection", function(socket) {
 						if (Math.abs(targetX - x) < (IMAGE_SIZE.WIDTH + POINT_SIZE.WIDTH) / 2 && Math.abs(targetY - y) < (IMAGE_SIZE.HEIGHT  + POINT_SIZE.HEIGHT) / 2) {
 							point.score++;
 							if (point.score >= 10) {
+								room.updateHosts();
 								room.emitToHosts("winner", point);
 								room.stop();
 							}
