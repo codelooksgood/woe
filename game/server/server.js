@@ -18,6 +18,7 @@ var TARGET_RADIUS = 0.05;
 
 // variables
 var rooms = [];
+var inactiveRooms = [];
 
 // socket.io
 io.on("connection", function(socket) {
@@ -46,6 +47,7 @@ io.on("connection", function(socket) {
 		}
 
 		if (room === null) {
+			socket.emit("noSuchRoom");
 			return;
 		}
 
@@ -56,6 +58,7 @@ io.on("connection", function(socket) {
 
 		var point = new Point();
 		room.points.push(point);
+		room.lastActive = Date.now();
 
 		console.log("[server.js: 132]\n   ", "client connected to room", room.id);
 
@@ -116,10 +119,24 @@ io.on("connection", function(socket) {
 				targetRadius: TARGET_RADIUS
 			});
 			room.hosts.push(socket);
+			room.lastActive = Date.now();
 		}
 
 		socket.on("reset", function() {
 			room.reset();
+		});
+
+		socket.on("disconnect", function() {
+			room.hosts.splice(room.hosts.indexOf(socket), 1);
+			if (room.hosts.length === 0) {
+				setTimeout(function() {
+					var index = rooms.indexOf(room);
+					if (room.hosts.length === 0 && index >= 0) {
+						room.stop();
+						rooms.splice(index, 1);
+					}
+				}, 2000);
+			}
 		});
 	});
 });

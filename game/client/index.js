@@ -35,6 +35,11 @@
 		window.history.back();
 	});
 
+	socket.on("noSuchRoom", function(id) {
+		window.alert("This room doesn't exist anymore.");
+		window.history.back();
+	});
+
 	// events
 	addEventListener([document.body], ["mousedown", "touchstart"], function(event) {
 		downStart = Date.now();
