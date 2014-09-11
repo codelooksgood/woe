@@ -8,6 +8,7 @@ var Room = function(id) {
 	this.points = [];
 	this.targets = [];
 	this.hosts = [];
+	this.stopped = false;
 
 	this.tick();
 };
@@ -46,11 +47,29 @@ Room.prototype.emitToHosts = function() {
 };
 
 Room.prototype.tick = function() {
-	this.targets.forEach(function(target) {
-		target.move();
+	if (!this.stopped) {
+		this.targets.forEach(function(target) {
+			target.move();
+		});
+		this.updateHosts();
+		setTimeout(this.tick.bind(this), 25);
+	}
+};
+
+Room.prototype.stop = function() {
+	this.stopped = true;
+};
+
+Room.prototype.reset = function() {
+	room.points.forEach(function(point) {
+		point.score = 0;
 	});
-	this.updateHosts();
-	setTimeout(this.tick.bind(this), 25);
+	room.targets = [];
+	room.fill();
+	if (this.stopped) {
+		this.stopped = false;
+		this.tick();
+	}
 };
 
 module.exports = Room;

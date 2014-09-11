@@ -82,6 +82,10 @@ io.on("connection", function(socket) {
 						var targetY = target.y + IMAGE_SIZE.HEIGHT / 2;
 						if (Math.abs(targetX - x) < (IMAGE_SIZE.WIDTH + POINT_SIZE.WIDTH) / 2 && Math.abs(targetY - y) < (IMAGE_SIZE.HEIGHT  + POINT_SIZE.HEIGHT) / 2) {
 							point.score++;
+							if (point.score >= 10) {
+								room.emitToHosts("winner", point);
+								room.stop();
+							}
 							room.targets.splice(room.targets.indexOf(target), 1);
 							setTimeout(Target.new.bind(Target, room), 2000);
 						}
@@ -116,11 +120,7 @@ io.on("connection", function(socket) {
 		}
 
 		socket.on("reset", function() {
-			room.points.forEach(function(point) {
-				point.score = 0;
-			});
-			room.targets = [];
-			room.fill();
+			room.reset();
 		});
 	});
 });
