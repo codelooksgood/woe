@@ -1,0 +1,31 @@
+html {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+button {
+	width: 100%;
+	height: 40px;
+	margin: 0 0 5% 0;
+	padding: 0;
+	background: none;
+	font-size: 1em;
+	text-decoration: none;
+}
+
+.index {
+	height: 100%;
+	width: 50%;
+	max-width: 480px;
+	margin: auto;
+	text-align: center;
+}

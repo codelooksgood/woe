@@ -1,7 +1,7 @@
 (function() {
 	"use strict";
 
-	var socket = io();
+	var socket = window.io();
 	socket.on("room", function(room) {
 		window.location.href += "host/index.html?id=" + room.id;
 	});
@@ -15,7 +15,7 @@
 			roomsHTML += "<button id=" + room.id + " " + (openSlots === 0 ? "disabled" : "") + ">Host " + room.id + " (" + openSlots + " open slots)" + "</room>";
 		});
 
-		document.body.innerHTML += roomsHTML;
+		document.getElementById("index").innerHTML += roomsHTML;
 	});
 
 	document.addEventListener("click", function(event) {
