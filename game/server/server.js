@@ -92,7 +92,7 @@ io.on("connection", function(socket) {
 		socket.on("disconnect", function() {
 			room.points.splice(room.points.indexOf(point), 1);
 		});
-		socket.emit("clientId", point.id);
+		socket.emit("clientPoint", point);
 	});
 
 	// host

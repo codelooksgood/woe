@@ -25,8 +25,9 @@
 		socket.emit("client", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
 	});
 
-	socket.on("clientId", function(id) {
-		clientId = id;
+	socket.on("clientPoint", function(point) {
+		clientId = point.id;
+		document.body.style.backgroundColor = point.color;
 	});
 
 	socket.on("roomFull", function(id) {
