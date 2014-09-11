@@ -75,7 +75,7 @@ io.on("connection", function(socket) {
 						timestamp: new Date().getTime()
 					});
 					room.targets.forEach(function(target) {
-						if (TARGET_RADIUS > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
+						if (TARGET_RADIUS + Math.sqrt(2 * Math.pow(POINT_SIZE.WIDTH / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
 							point.score++;
 							if (point.score >= 10) {
 								room.updateHosts();
