@@ -13,9 +13,21 @@ body {
 	overflow: hidden;
 }
 
-.fullscreen {
-	height: 100%;
-	width: 100%;
+button {
+	width: 80%;
+	height: 40px;
+	margin: 0 0 5% 0;
+	padding: 0;
+	background: none;
+	font-size: 1em;
+	text-decoration: none;
+}
+
+.box {
+	display: -webkit-box;
+	-webkit-box-pack: center;
+	-webkit-box-align: center;
+	-webkit-box-orient: vertical;
 }
 
 .left {
@@ -26,22 +38,46 @@ body {
 	float: left;
 }
 
-.header {
-	height: 20%;
-	width: 100%;
+.sidebar {
+	height: 100%;
+	width: 24%;
+	text-align: center;
+	border-left: 1px solid black;
 }
 
 .buttonControl {
-	height: 100%;
-	width: 50%;
+	height: 10%;
+	width: 100%;
 }
 
 .playerInfo {
+	height: 85%;
+	width: 100%;
+}
+
+.player {
+	width: 100%;
+}
+
+.players {
+	width: 100%;
 	height: 100%;
-	width: 50%;
+}
+
+.scoreBoxContainer {
+	width: 90%;
+	height: 20px;
+	margin: auto;
+}
+
+.scoreBox {
+	width: 9%;
+	height: 20px;
+	float: left;
+	border-right: 1px solid white;
 }
 
 .gamefield {
-	height: 80%;
-	width: 100%;
+	height: 95%;
+	width: 74%;
 }

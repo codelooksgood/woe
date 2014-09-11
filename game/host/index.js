@@ -15,14 +15,13 @@
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
 	var points = [];
+	var oldPoints = [];
 	var targets = [];
 	var fires = [];
 
 	// canvas
 	var resizeCanvas = function() {
 		var min = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
-		canvas.style.height = min + "px";
-		canvas.style.width = min + "px";
 		canvas.width = min;
 		canvas.height = min;
 	};
@@ -64,16 +63,35 @@
 			});
 		}
 
-		document.getElementById("players").innerHTML = "";
-
-		points.sort(function(point1, point2) {
+		var sortedPoints = points.sort(function(point1, point2) {
 			return point1.id > point2.id;
-		}).forEach(function(point, index) {
+		});
+
+		sortedPoints.forEach(function(point) {
 			context.fillStyle = point.color;
 			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE.WIDTH * canvas.width, POINT_SIZE.HEIGHT * canvas.width);
-			// score
-			document.getElementById("players").innerHTML += "<div class='player'>Player " + (index + 1) + ": " + point.score + "</div>";
 		});
+
+		if (JSON.stringify(points) !== JSON.stringify(oldPoints)) {
+			oldPoints = points;
+
+			if (points.length === 0) {
+				document.getElementById("players").innerHTML = "Waiting for players ...";
+			}
+			else {
+				document.getElementById("players").innerHTML = "";
+			}
+
+			sortedPoints.forEach(function(point, index) {
+				// score
+				document.getElementById("players").innerHTML += "<h2 class='player'>Player " + (index + 1) + "</h2>";
+				document.getElementById("players").innerHTML += "<div id='scoreBoxContainer" + index + "' class='scoreBoxContainer'></div>";
+				for (var i=0; i < point.score; i++) {
+					document.getElementById("scoreBoxContainer" + index).innerHTML += "<div class='scoreBox' style='background-color: " + point.color + ";'></div>";
+				}
+			});
+		}
+
 		window.requestAnimationFrame(draw);
 	};
 
@@ -107,7 +125,7 @@
 		}).indexOf(point.id);
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
-
+		context.fillStyle = point.color;
 		context.textAlign = "center";
 		context.fillText("Congratulation Player " + (winnerIndex + 1) + "!", canvas.width / 2, canvas.height / 2);
 

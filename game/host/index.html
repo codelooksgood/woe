@@ -6,16 +6,19 @@
 		<script src="/socket.io/socket.io.js"></script>
 	</head>
 	<body>
-		<div class="header">
-			<div class="buttonControl left">
+		<div class="gamefield box left">
+			<canvas id="canvas"></canvas>
+		</div>
+		<div class="sidebar box right">
+			<div class="buttonControl">
 				<button id="reset">Restart</button>
 			</div>
-			<div id="players" class="playerInfo right">
-
+			<div class="playerInfo">
+				<h1>Players</h1>
+				<div id="players" class="players">
+					Waiting for players ...
+				</div>
 			</div>
-		</div>
-		<div class="gamefield">
-			<canvas id="canvas" class="fullscreen"></canvas>
 		</div>
 		<script type="text/javascript" src="index.js"></script>
 	</body>
