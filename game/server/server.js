@@ -60,8 +60,11 @@ io.on("connection", function(socket) {
 		console.log("[server.js: 132]\n   ", "client connected to room", room.id);
 
 		socket.on("move", function(x, y) {
-			point.x -= x;
-			point.y -= y;
+			x = point.x - x;
+			y = point.y - y;
+
+			point.x = Math.min(Math.max(0, x), 1 - POINT_SIZE.WIDTH);
+			point.y = Math.min(Math.max(0, y), 1 - POINT_SIZE.HEIGHT);
 		});
 		socket.on("fire", function(id) {
 			room.points.forEach(function(point) {
