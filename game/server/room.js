@@ -1,6 +1,8 @@
 /* jshint node:true */
 "use strict";
 
+var Target = require("./target");
+
 var Room = function(id) {
 	this.id = Math.floor(Math.random() * 9000 + 1000).toString();
 	this.points = [];
@@ -18,6 +20,12 @@ Room.prototype.info = function() {
 		}),
 		points: this.points,
 	};
+};
+
+Room.prototype.fill = function() {
+	for (var i = 0; i < 5 - this.targets.length; i++) {
+		setTimeout(Target.new.bind(Target, this), i * 2000);
+	}
 };
 
 Room.prototype.addTarget = function(target) {

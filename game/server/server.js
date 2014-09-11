@@ -33,9 +33,7 @@ io.on("connection", function(socket) {
 
 	socket.on("newRoom", function() {
 		var room = new Room();
-		for (var i = 0; i < 5; i++) {
-			setTimeout(Target.new.bind(Target, room), i * 2000);
-		}
+		room.fill();
 		rooms.push(room);
 		socket.emit("room", room.info());
 	});
@@ -116,5 +114,13 @@ io.on("connection", function(socket) {
 			});
 			room.hosts.push(socket);
 		}
+
+		socket.on("reset", function() {
+			room.points.forEach(function(point) {
+				point.score = 0;
+			});
+			room.targets = [];
+			room.fill();
+		});
 	});
 });
