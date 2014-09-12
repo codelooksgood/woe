@@ -29,7 +29,14 @@ Room.prototype.info = function() {
 
 Room.prototype.fill = function() {
 	for (var i = 0; i < NUMBER_OF_TARGETS - this.targets.length; i++) {
-		setTimeout(this.newTarget.bind(this), i * 2000);
+		var self = this;
+		var targets =  this.targets;
+		setTimeout(function() {
+			// only create new target when this.targets hasn't changed in the meantime (e.g. due to a reset)
+			if (self.targets === targets) {
+				self.newTarget();
+			}
+		}, i * 2000);
 	}
 };
 
