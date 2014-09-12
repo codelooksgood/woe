@@ -9,23 +9,26 @@ var Player = require("./player");
 var Target = require("./target");
 
 // variables
-// TODO: should be object {"roomid": room}
-var rooms = [];
+var rooms = {};
 
 // socket.io
 io.on("connection", function(socket) {
 	// lobby
 	socket.on("requestCurrentRooms", function() {
-		socket.emit("currentRooms", rooms.map(function(room) {
-			return room.info();
-		}));
+		var roomsArray = [];
+
+		for (var roomKey in rooms) {
+			roomsArray.push(rooms[roomKey].info());
+		}
+
+		socket.emit("currentRooms", roomsArray);
 	});
 
 	// TODO: rename to requestNewRoom
 	socket.on("newRoom", function() {
 		var room = new Room();
 		room.fill();
-		rooms.push(room);
+		rooms[room.id] = room;
 		// TODO: rename accordingly to TODO above
 		socket.emit("room", room.info());
 	});
@@ -33,18 +36,10 @@ io.on("connection", function(socket) {
 	// TODO: rename client to player
 	// client
 	// TODO: rename "client" to "playerConnect"
-	// TODO: rename id to roomId
-	socket.on("client", function(id) {
-		// var room = rooms[id];
-		var room = null;
-		for (var i = 0; i < rooms.length; i++) {
-			if (rooms[i].id === id) {
-				room = rooms[i];
-				break;
-			}
-		}
+	socket.on("client", function(roomId) {
+		var room = rooms[roomId];
 
-		if (room === null) {
+		if (room === undefined) {
 			socket.emit("noSuchRoom");
 			return;
 		}
@@ -103,25 +98,19 @@ io.on("connection", function(socket) {
 	});
 
 	// host
-	// TODO: id -> roomId
-	socket.on("host", function(id) {
-		var room = null;
-		for (var i = 0; i < rooms.length; i++) {
-			if (rooms[i].id === id) {
-				room = rooms[i];
-				break;
-			}
+	socket.on("host", function(roomId) {
+		var room = rooms[roomId];
+
+		if (room === undefined) {
+			return;
 		}
 
-		// TODO: if (room === undefined) return;
-		if (room !== null) {
-			// TODO: "sizes" -> "objectSizes"
-			socket.emit("sizes", {
-				pointSize: Player.SIZE,
-				targetRadius: Target.SIZE
-			});
-			room.hosts.push(socket);
-		}
+		// TODO: "sizes" -> "objectSizes"
+		socket.emit("sizes", {
+			pointSize: Player.SIZE,
+			targetRadius: Target.SIZE
+		});
+		room.hosts.push(socket);
 
 		// TODO: "reset" -> "requestReset"
 		socket.on("reset", function() {
@@ -133,11 +122,7 @@ io.on("connection", function(socket) {
 			room.hosts.splice(room.hosts.indexOf(socket), 1);
 			if (room.hosts.length === 0) {
 				setTimeout(function() {
-					var index = rooms.indexOf(room);
-					if (room.hosts.length === 0 && index >= 0) {
-						room.stop();
-						rooms.splice(index, 1);
-					}
+					delete rooms[roomId];
 				}, 2000);
 			}
 		});
