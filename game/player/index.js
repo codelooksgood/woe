@@ -22,10 +22,10 @@
 	var socket = io();
 
 	socket.on("connect", function() {
-		socket.emit("client", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
+		socket.emit("playerConnect", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
 	});
 
-	socket.on("clientPlayer", function(player) {
+	socket.on("playerInfo", function(player) {
 		playerId = player.id;
 		document.body.style.backgroundColor = player.color;
 	});
@@ -61,7 +61,7 @@
 		var time = Date.now();
 		if (time - downStart < 150 && time - lastFire > 1000) {
 			lastFire = time;
-			socket.emit("fire", playerId);
+			socket.emit("playerFired", playerId);
 		}
 		didStart = false;
 	});
@@ -78,7 +78,7 @@
 		}
 
 		if (currentX !== null && currentY !== null && didStart) {
-			socket.emit("move", (currentX - x) / document.body.clientWidth, (currentY - y) / document.body.clientHeight);
+			socket.emit("playerMoved", (currentX - x) / document.body.clientWidth, (currentY - y) / document.body.clientHeight);
 		}
 
 		currentX = x;

@@ -123,12 +123,12 @@
 		targets = room.targets;
 	});
 
-	socket.on("sizes", function(sizes) {
+	socket.on("objectSizes", function(sizes) {
 		POINT_SIZE = sizes.pointSize;
 		TARGET_RADIUS = sizes.targetRadius;
 	});
 
-	socket.on("fired", function(fire) {
+	socket.on("playerFired", function(fire) {
 		fire.timestamp = Date.now();
 		fires.push(fire);
 	});
@@ -137,7 +137,7 @@
 		socket.emit("host", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20")) || null);
 	});
 
-	socket.on("winner", function(player) {
+	socket.on("gameWon", function(player) {
 		isGameRunning = false;
 		var winnerIndex = players.map(function(player) {
 			return player.id;
@@ -154,7 +154,7 @@
 	window.addEventListener("resize", resizeCanvas);
 
 	document.getElementById("reset").addEventListener("click", function() {
-		socket.emit("reset");
+		socket.emit("requestReset");
 	}, false);
 
 	// initial draw

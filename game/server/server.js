@@ -24,19 +24,15 @@ io.on("connection", function(socket) {
 		socket.emit("currentRooms", roomsArray);
 	});
 
-	// TODO: rename to requestNewRoom
-	socket.on("newRoom", function() {
+	socket.on("requestNewRoom", function() {
 		var room = new Room();
 		room.fill();
 		rooms[room.id] = room;
-		// TODO: rename accordingly to TODO above
-		socket.emit("room", room.info());
+		socket.emit("newRoom", room.info());
 	});
 
-	// TODO: rename client to player
-	// client
-	// TODO: rename "client" to "playerConnect"
-	socket.on("client", function(roomId) {
+	// player
+	socket.on("playerConnect", function(roomId) {
 		var room = rooms[roomId];
 
 		if (room === undefined) {
@@ -53,8 +49,7 @@ io.on("connection", function(socket) {
 		var player = new Player();
 		room.addPlayer(player);
 
-		// TODO: rename "move" ("playerMove"/"playerMoved"/"newPlayerMove"?)
-		socket.on("move", function(diffX, diffY) {
+		socket.on("playerMoved", function(diffX, diffY) {
 			diffX = player.x - diffX;
 			diffY = player.y - diffY;
 
@@ -63,24 +58,23 @@ io.on("connection", function(socket) {
 			player.y = Math.min(Math.max(0, diffY), 1 - Player.SIZE);
 		});
 
-		// TODO: "fire" -> "playerFired"
-		socket.on("fire", function(id) {
+		socket.on("playerFired", function(id) {
 			var player = room.players[id];
 			var x = player.x + Player.SIZE / 2;
 			var y = player.y + Player.SIZE / 2;
-			// TODO: "fired" -> "playerFired"
-			room.emitToHosts("fired", {
+
+			room.emitToHosts("playerFired", {
 				x: x,
 				y: y,
 				player: player
 			});
+
 			room.targets.forEach(function(target) {
 				if (Target.SIZE + Math.sqrt(2 * Math.pow(Player.SIZE / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
 					player.score++;
 					if (player.score >= 10) {
 						room.updateHosts();
-						// TODO: "winner" -> "gameWon"
-						room.emitToHosts("winner", player);
+						room.emitToHosts("gameWon", player);
 						room.stop();
 					}
 					// TODO: room.removeTarget(target);
@@ -92,8 +86,8 @@ io.on("connection", function(socket) {
 		socket.on("disconnect", function() {
 			room.removePlayer(player);
 		});
-		// TODO: "clientPlayer" -> "playerInfo"
-		socket.emit("clientPlayer", player);
+
+		socket.emit("playerInfo", player);
 	});
 
 	// host
@@ -104,15 +98,13 @@ io.on("connection", function(socket) {
 			return;
 		}
 
-		// TODO: "sizes" -> "objectSizes"
-		socket.emit("sizes", {
+		socket.emit("objectSizes", {
 			pointSize: Player.SIZE,
 			targetRadius: Target.SIZE
 		});
 		room.hosts.push(socket);
 
-		// TODO: "reset" -> "requestReset"
-		socket.on("reset", function() {
+		socket.on("requestReset", function() {
 			room.reset();
 		});
 

@@ -2,7 +2,7 @@
 	"use strict";
 
 	var socket = window.io();
-	socket.on("room", function(room) {
+	socket.on("newRoom", function(room) {
 		window.location.href += "host/index.html?id=" + room.id;
 	});
 
@@ -19,7 +19,7 @@
 	});
 
 	document.getElementById("newRoom").addEventListener("click", function() {
-		socket.emit("newRoom");
+		socket.emit("requestNewRoom");
 	}, false);
 
 	socket.emit("requestCurrentRooms");
