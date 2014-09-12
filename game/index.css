@@ -15,6 +15,10 @@ button {
 	text-decoration: none;
 }
 
+a {
+	color: black;
+}
+
 .index {
 	height: 100%;
 	width: 90%;
