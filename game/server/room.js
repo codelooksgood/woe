@@ -64,6 +64,13 @@ Room.prototype.emitToHosts = function() {
 	}, this);
 };
 
+Room.prototype.removeHost = function(host) {
+	var hostIndex = this.hosts.indexOf(host);
+	if (hostIndex > -1) {
+		this.hosts.splice(hostIndex, 1);
+	}
+};
+
 Room.prototype.tick = function() {
 	if (!this.stopped) {
 		this.targets.forEach(function(target) {

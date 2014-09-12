@@ -54,14 +54,13 @@ io.on("connection", function(socket) {
 		room.addPlayer(player);
 
 		// TODO: rename "move" ("playerMove"/"playerMoved"/"newPlayerMove"?)
-		// TODO: rename x, y to diffX, diffY
-		socket.on("move", function(x, y) {
-			x = player.x - x;
-			y = player.y - y;
+		socket.on("move", function(diffX, diffY) {
+			diffX = player.x - diffX;
+			diffY = player.y - diffY;
 
 			// restrict players to game field bounds
-			player.x = Math.min(Math.max(0, x), 1 - Player.SIZE);
-			player.y = Math.min(Math.max(0, y), 1 - Player.SIZE);
+			player.x = Math.min(Math.max(0, diffX), 1 - Player.SIZE);
+			player.y = Math.min(Math.max(0, diffY), 1 - Player.SIZE);
 		});
 
 		// TODO: "fire" -> "playerFired"
@@ -118,8 +117,7 @@ io.on("connection", function(socket) {
 		});
 
 		socket.on("disconnect", function() {
-			// TODO: room.removeHost(socket);
-			room.hosts.splice(room.hosts.indexOf(socket), 1);
+			room.removeHost(socket);
 			if (room.hosts.length === 0) {
 				setTimeout(function() {
 					delete rooms[roomId];
