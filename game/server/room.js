@@ -9,7 +9,7 @@ var id = 1;
 var Room = function() {
 	this.id = id.toString();
 	id++;
-	this.points = {};
+	this.players = {};
 	this.targets = [];
 	this.hosts = [];
 	this.stopped = false;
@@ -23,7 +23,7 @@ Room.prototype.info = function() {
 		targets: this.targets.map(function(target) {
 			return target.info();
 		}),
-		points: this.points,
+		players: this.players,
 	};
 };
 
@@ -42,15 +42,15 @@ Room.prototype.addTarget = function(target) {
 };
 
 Room.prototype.numberOfPlayers = function() {
-	return Object.keys(this.points).length;
+	return Object.keys(this.players).length;
 };
 
-Room.prototype.addPoint = function(point) {
-	this.points[point.id] = point;
+Room.prototype.addPlayer = function(player) {
+	this.players[player.id] = player;
 };
 
-Room.prototype.removePoint = function(point) {
-	delete this.points[point.id];
+Room.prototype.removePlayer = function(player) {
+	delete this.players[player.id];
 };
 
 Room.prototype.updateHosts = function() {
@@ -86,8 +86,8 @@ Room.prototype.stop = function() {
 };
 
 Room.prototype.reset = function() {
-	this.points.forEach(function(point) {
-		point.score = 0;
+	this.players.forEach(function(player) {
+		player.score = 0;
 	});
 	this.targets = [];
 	this.fill();

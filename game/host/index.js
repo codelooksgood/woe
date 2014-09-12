@@ -23,8 +23,8 @@
 	var isGameRunning = true;
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
-	var points = [];
-	var oldPoints = [];
+	var players = [];
+	var oldPlayers = [];
 	var targets = [];
 	var fires = [];
 
@@ -35,7 +35,7 @@
 			}));
 		};
 
-		return getHash(points) !== getHash(oldPoints);
+		return getHash(players) !== getHash(oldPlayers);
 	};
 
 	// canvas
@@ -63,7 +63,7 @@
 					firesToRemove.push(fire);
 					return;
 				}
-				context.strokeStyle = fire.point.color;
+				context.strokeStyle = fire.player.color;
 				context.lineWidth = 5;
 				context.beginPath();
 	      		context.arc(fire.x * canvas.width, fire.y * canvas.height, radius, 0, 2 * Math.PI, false);
@@ -82,31 +82,31 @@
 			});
 		}
 
-		var sortedPoints = points.sort(function(point1, point2) {
-			return point1.id > point2.id;
+		var sortedPlayers = players.sort(function(player1, player2) {
+			return player1.id > player2.id;
 		});
 
-		sortedPoints.forEach(function(point) {
-			context.fillStyle = point.color;
-			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE * canvas.width, POINT_SIZE * canvas.width);
+		sortedPlayers.forEach(function(player) {
+			context.fillStyle = player.color;
+			context.fillRect(player.x * canvas.width, player.y * canvas.height, POINT_SIZE * canvas.width, POINT_SIZE * canvas.width);
 		});
 
 		if (isPlayerInfoNew()) {
-			oldPoints = points;
+			oldPlayers = players;
 
-			if (points.length === 0) {
+			if (players.length === 0) {
 				document.getElementById("players").innerHTML = "Waiting for players ...";
 			}
 			else {
 				document.getElementById("players").innerHTML = "";
 			}
 
-			sortedPoints.forEach(function(point, index) {
+			sortedPlayers.forEach(function(player, index) {
 				// score
 				document.getElementById("players").innerHTML += "<h2 class='player'>Player " + (index + 1) + "</h2>";
 				document.getElementById("players").innerHTML += "<div id='scoreBoxContainer" + index + "' class='scoreBoxContainer'></div>";
-				for (var i=0; i < point.score; i++) {
-					document.getElementById("scoreBoxContainer" + index).innerHTML += "<div class='scoreBox' style='background-color: " + point.color + ";'></div>";
+				for (var i=0; i < player.score; i++) {
+					document.getElementById("scoreBoxContainer" + index).innerHTML += "<div class='scoreBox' style='background-color: " + player.color + ";'></div>";
 				}
 			});
 		}
@@ -119,7 +119,7 @@
 
 	socket.on("update", function(room) {
 		isGameRunning = true;
-		points = toArray(room.points);
+		players = toArray(room.players);
 		targets = room.targets;
 	});
 
@@ -137,14 +137,14 @@
 		socket.emit("host", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20")) || null);
 	});
 
-	socket.on("winner", function(point) {
+	socket.on("winner", function(player) {
 		isGameRunning = false;
-		var winnerIndex = points.map(function(point) {
-			return point.id;
-		}).indexOf(point.id);
+		var winnerIndex = players.map(function(player) {
+			return player.id;
+		}).indexOf(player.id);
 
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		context.fillStyle = point.color;
+		context.fillStyle = player.color;
 		context.textAlign = "center";
 		context.fillText("Congratulation Player " + (winnerIndex + 1) + "!", canvas.width / 2, canvas.height / 2);
 

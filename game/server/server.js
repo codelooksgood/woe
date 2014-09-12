@@ -5,9 +5,7 @@
 var io = require("sandbox-io");
 
 var Room = require("./room");
-// TODO: rename to Player
-var Point = require("./point");
-var Target = require("./target");
+var Player = require("./player");
 
 // constants
 // TODO: should be Player.SIZE resp. Target.SIZE
@@ -61,38 +59,38 @@ io.on("connection", function(socket) {
 			return;
 		}
 
-		var point = new Point();
-		room.addPoint(point);
+		var player = new Player();
+		room.addPlayer(player);
 
 		// TODO: rename "move" ("playerMove"/"playerMoved"/"newPlayerMove"?)
 		// TODO: rename x, y to diffX, diffY
 		socket.on("move", function(x, y) {
-			x = point.x - x;
-			y = point.y - y;
+			x = player.x - x;
+			y = player.y - y;
 
 			// restrict players to game field bounds
-			point.x = Math.min(Math.max(0, x), 1 - POINT_SIZE);
-			point.y = Math.min(Math.max(0, y), 1 - POINT_SIZE);
+			player.x = Math.min(Math.max(0, x), 1 - POINT_SIZE);
+			player.y = Math.min(Math.max(0, y), 1 - POINT_SIZE);
 		});
 
 		// TODO: "fire" -> "playerFired"
 		socket.on("fire", function(id) {
-			var point = room.points[id];
-			var x = point.x + POINT_SIZE / 2;
-			var y = point.y + POINT_SIZE / 2;
+			var player = room.players[id];
+			var x = player.x + POINT_SIZE / 2;
+			var y = player.y + POINT_SIZE / 2;
 			// TODO: "fired" -> "playerFired"
 			room.emitToHosts("fired", {
 				x: x,
 				y: y,
-				point: point
+				player: player
 			});
 			room.targets.forEach(function(target) {
 				if (TARGET_RADIUS + Math.sqrt(2 * Math.pow(POINT_SIZE / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
-					point.score++;
-					if (point.score >= 10) {
+					player.score++;
+					if (player.score >= 10) {
 						room.updateHosts();
 						// TODO: "winner" -> "gameWon"
-						room.emitToHosts("winner", point);
+						room.emitToHosts("winner", player);
 						room.stop();
 					}
 					// TODO: room.removeTarget(target);
@@ -102,10 +100,10 @@ io.on("connection", function(socket) {
 			});
 		});
 		socket.on("disconnect", function() {
-			room.removePoint(point);
+			room.removePlayer(player);
 		});
-		// TODO: "clientPoint" -> "playerInfo"
-		socket.emit("clientPoint", point);
+		// TODO: "clientPlayer" -> "playerInfo"
+		socket.emit("clientPlayer", player);
 	});
 
 	// host

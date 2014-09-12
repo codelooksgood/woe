@@ -15,7 +15,7 @@
 	var currentY = null;
 	var didStart = false;
 	var downStart = null;
-	var clientId = null;
+	var playerId = null;
 	var lastFire = 0;
 
 	// socket.io
@@ -25,9 +25,9 @@
 		socket.emit("client", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
 	});
 
-	socket.on("clientPoint", function(point) {
-		clientId = point.id;
-		document.body.style.backgroundColor = point.color;
+	socket.on("clientPlayer", function(player) {
+		playerId = player.id;
+		document.body.style.backgroundColor = player.color;
 	});
 
 	socket.on("roomFull", function(id) {
@@ -61,7 +61,7 @@
 		var time = Date.now();
 		if (time - downStart < 150 && time - lastFire > 1000) {
 			lastFire = time;
-			socket.emit("fire", clientId);
+			socket.emit("fire", playerId);
 		}
 		didStart = false;
 	});

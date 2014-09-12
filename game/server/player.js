@@ -9,7 +9,7 @@ var randomColor = function() {
 	return "rgb(" + r + "," + g + "," + b + ")";
 };
 
-var Point = function(x, y) {
+var Player = function(x, y) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.id = id;
@@ -18,4 +18,4 @@ var Point = function(x, y) {
 	this.score = 0;
 };
 
-module.exports = Point;
+module.exports = Player;
