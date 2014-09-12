@@ -2,7 +2,6 @@
 	"use strict";
 
 	// helper
-	// from underscore.js
 	var toArray = function(object) {
 		var array = [];
 		var keys = Object.keys(object);
@@ -40,9 +39,9 @@
 
 	// canvas
 	var resizeCanvas = function() {
-		var min = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
-		canvas.width = min - 20;
-		canvas.height = min - 20;
+		var size = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight) - 20;
+		canvas.width = size;
+		canvas.height = size;
 	};
 	resizeCanvas();
 
@@ -53,14 +52,13 @@
 		if (isGameRunning) {
 			context.clearRect(0, 0, canvas.width, canvas.height);
 
-			var firesToRemove = [];
 			fires.forEach(function(fire) {
 				var radius = (Date.now() - fire.timestamp) / (2 * POINT_SIZE * canvas.width) + POINT_SIZE * canvas.width / 2;
 				if (radius < 0) {
 					return;
 				}
 				if (radius > 30) {
-					firesToRemove.push(fire);
+					fires.splice(fires.indexOf(fire), 1);
 					return;
 				}
 				context.strokeStyle = fire.player.color;
@@ -70,29 +68,25 @@
 	      		context.stroke();
 			});
 
-			firesToRemove.forEach(function(fire) {
-				fires.splice(fires.indexOf(fire), 1);
-			});
-
+			context.fillStyle = "rgb(220, 0, 0)";
 			targets.forEach(function(target) {
-				context.fillStyle = "rgb(220, 0, 0)";
 				context.beginPath();
 				context.arc(target.x * canvas.width, target.y * canvas.height, TARGET_RADIUS * canvas.width, 0, 2 * Math.PI, false);
 				context.fill();
 			});
 		}
 
-		var sortedPlayers = players.sort(function(player1, player2) {
-			return player1.id > player2.id;
-		});
-
-		sortedPlayers.forEach(function(player) {
+		players.forEach(function(player) {
 			context.fillStyle = player.color;
 			context.fillRect(player.x * canvas.width, player.y * canvas.height, POINT_SIZE * canvas.width, POINT_SIZE * canvas.width);
 		});
 
 		if (isPlayerInfoNew()) {
 			oldPlayers = players;
+
+			var sortedPlayers = players.sort(function(player1, player2) {
+				return player1.id > player2.id;
+			});
 
 			if (players.length === 0) {
 				document.getElementById("players").innerHTML = "Waiting for players ...";
@@ -103,11 +97,14 @@
 
 			sortedPlayers.forEach(function(player, index) {
 				// score
-				document.getElementById("players").innerHTML += "<h2 class='player'>Player " + (index + 1) + "</h2>";
-				document.getElementById("players").innerHTML += "<div id='scoreBoxContainer" + index + "' class='scoreBoxContainer'></div>";
+				var html = "<h2 class='player'>Player " + (index + 1) + "</h2>";
+				html += "<div class='scoreBoxContainer'>";
 				for (var i=0; i < player.score; i++) {
-					document.getElementById("scoreBoxContainer" + index).innerHTML += "<div class='scoreBox' style='background-color: " + player.color + ";'></div>";
+					html += "<div class='scoreBox' style='background-color: " + player.color + ";'></div>";
 				}
+				html += "</div>";
+
+				document.getElementById("players").innerHTML += html;
 			});
 		}
 
