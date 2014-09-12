@@ -18,4 +18,6 @@ var Player = function(x, y) {
 	this.score = 0;
 };
 
+Player.SIZE = 0.025;
+
 module.exports = Player;

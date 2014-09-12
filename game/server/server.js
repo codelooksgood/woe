@@ -6,11 +6,7 @@ var io = require("sandbox-io");
 
 var Room = require("./room");
 var Player = require("./player");
-
-// constants
-// TODO: should be Player.SIZE resp. Target.SIZE
-var POINT_SIZE = 0.025;
-var TARGET_RADIUS = 0.05;
+var Target = require("./target");
 
 // variables
 // TODO: should be object {"roomid": room}
@@ -69,15 +65,15 @@ io.on("connection", function(socket) {
 			y = player.y - y;
 
 			// restrict players to game field bounds
-			player.x = Math.min(Math.max(0, x), 1 - POINT_SIZE);
-			player.y = Math.min(Math.max(0, y), 1 - POINT_SIZE);
+			player.x = Math.min(Math.max(0, x), 1 - Player.SIZE);
+			player.y = Math.min(Math.max(0, y), 1 - Player.SIZE);
 		});
 
 		// TODO: "fire" -> "playerFired"
 		socket.on("fire", function(id) {
 			var player = room.players[id];
-			var x = player.x + POINT_SIZE / 2;
-			var y = player.y + POINT_SIZE / 2;
+			var x = player.x + Player.SIZE / 2;
+			var y = player.y + Player.SIZE / 2;
 			// TODO: "fired" -> "playerFired"
 			room.emitToHosts("fired", {
 				x: x,
@@ -85,7 +81,7 @@ io.on("connection", function(socket) {
 				player: player
 			});
 			room.targets.forEach(function(target) {
-				if (TARGET_RADIUS + Math.sqrt(2 * Math.pow(POINT_SIZE / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
+				if (Target.SIZE + Math.sqrt(2 * Math.pow(Player.SIZE / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
 					player.score++;
 					if (player.score >= 10) {
 						room.updateHosts();
@@ -121,8 +117,8 @@ io.on("connection", function(socket) {
 		if (room !== null) {
 			// TODO: "sizes" -> "objectSizes"
 			socket.emit("sizes", {
-				pointSize: POINT_SIZE,
-				targetRadius: TARGET_RADIUS
+				pointSize: Player.SIZE,
+				targetRadius: Target.SIZE
 			});
 			room.hosts.push(socket);
 		}

@@ -29,4 +29,6 @@ Target.prototype.info = function () {
 	};
 };
 
+Target.SIZE = 0.05;
+
 module.exports = Target;
