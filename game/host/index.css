@@ -73,9 +73,11 @@ button {
 }
 
 .scoreBox {
+	box-sizing: border-box;
 	width: 10%;
 	height: 20px;
 	float: left;
+	border: 1px solid white;
 }
 
 .gamefield {
