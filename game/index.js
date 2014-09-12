@@ -11,7 +11,7 @@
 		rooms.sort(function(room1, room2) {
 			return room1.id > room2.id;
 		}).forEach(function(room) {
-			var openSlots = 4 - room.points.length;
+			var openSlots = 4 - Object.keys(room.points).length;
 			roomsHTML += "<a href='client/index.html?id=" + room.id + "'><button " + (openSlots === 0 ? "disabled" : "") + ">Game " + room.id + " (" + openSlots + " open slots) </button></a>";
 		});
 

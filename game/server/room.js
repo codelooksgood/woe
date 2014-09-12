@@ -3,9 +3,13 @@
 
 var Target = require("./target");
 
+var NUMBER_OF_TARGETS = 5;
+
+var id = 1;
 var Room = function() {
-	this.id = Math.floor(Math.random() * 9000 + 1000).toString();
-	this.points = [];
+	this.id = id.toString();
+	id++;
+	this.points = {};
 	this.targets = [];
 	this.hosts = [];
 	this.stopped = false;
@@ -24,7 +28,7 @@ Room.prototype.info = function() {
 };
 
 Room.prototype.fill = function() {
-	for (var i = 0; i < 5 - this.targets.length; i++) {
+	for (var i = 0; i < NUMBER_OF_TARGETS - this.targets.length; i++) {
 		setTimeout(Target.new.bind(Target, this), i * 2000);
 	}
 };
@@ -33,10 +37,20 @@ Room.prototype.addTarget = function(target) {
 	this.targets.push(target);
 };
 
+Room.prototype.numberOfPlayers = function() {
+	return Object.keys(this.points).length;
+};
+
+Room.prototype.addPoint = function(point) {
+	this.points[point.id] = point;
+};
+
+Room.prototype.removePoint = function(point) {
+	delete this.points[point.id];
+};
+
 Room.prototype.updateHosts = function() {
-	this.hosts.forEach(function(hostSocket) {
-		hostSocket.emit("update", this.info());
-	}, this);
+	this.emitToHosts("update", this.info());
 };
 
 Room.prototype.emitToHosts = function() {

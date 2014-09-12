@@ -10,8 +10,6 @@ var randomColor = function() {
 };
 
 var Point = function(x, y) {
-	"use strict";
-
 	this.x = x || 0;
 	this.y = y || 0;
 	this.id = id;

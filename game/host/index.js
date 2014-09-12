@@ -2,6 +2,15 @@
 	"use strict";
 
 	// helper
+	// from underscore.js
+	var toArray = function(object) {
+		var array = [];
+		var keys = Object.keys(object);
+		for (var i = 0; i < keys.length; i++) {
+			array.push(object[keys[i]]);
+		}
+		return array;
+	};
 
 	// constants
 	var FONT_SIZE = 20;
@@ -110,7 +119,7 @@
 
 	socket.on("update", function(room) {
 		isGameRunning = true;
-		points = room.points;
+		points = toArray(room.points);
 		targets = room.targets;
 	});
 
