@@ -97,8 +97,7 @@ io.on("connection", function(socket) {
 					}
 					// TODO: room.removeTarget(target);
 					room.targets.splice(room.targets.indexOf(target), 1);
-					// TODO: room.newTarget();
-					setTimeout(Target.new.bind(Target, room), 2000);
+					setTimeout(room.newTarget.bind(room), 2000);
 				}
 			});
 		});

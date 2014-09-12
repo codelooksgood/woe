@@ -29,8 +29,12 @@ Room.prototype.info = function() {
 
 Room.prototype.fill = function() {
 	for (var i = 0; i < NUMBER_OF_TARGETS - this.targets.length; i++) {
-		setTimeout(Target.new.bind(Target, this), i * 2000);
+		setTimeout(this.newTarget.bind(this), i * 2000);
 	}
+};
+
+Room.prototype.newTarget = function() {
+	this.addTarget(new Target(0, Math.random() * 0.6 + 0.2));
 };
 
 Room.prototype.addTarget = function(target) {
@@ -64,7 +68,14 @@ Room.prototype.tick = function() {
 	if (!this.stopped) {
 		this.targets.forEach(function(target) {
 			target.move();
-		});
+			if (target.x > 1) {
+				var index = this.targets.indexOf(target);
+				if (index >= 0) {
+					this.targets.splice(index, 1);
+					this.newTarget();
+				}
+			}
+		}, this);
 		this.updateHosts();
 		setTimeout(this.tick.bind(this), 25);
 	}
