@@ -46,8 +46,7 @@ io.on("connection", function(socket) {
 			return;
 		}
 
-		var player = new Player();
-		room.addPlayer(player);
+		var player = room.newPlayer();
 
 		socket.on("playerMoved", function(diffX, diffY) {
 			diffX = player.x - diffX;

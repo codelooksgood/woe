@@ -68,7 +68,7 @@
 	      		context.stroke();
 			});
 
-			context.fillStyle = "rgb(220, 0, 0)";
+			context.fillStyle = "rgb(0, 153, 0)";
 			targets.forEach(function(target) {
 				context.beginPath();
 				context.arc(target.x * canvas.width, target.y * canvas.height, TARGET_RADIUS * canvas.width, 0, 2 * Math.PI, false);
@@ -95,9 +95,9 @@
 				document.getElementById("players").innerHTML = "";
 			}
 
-			sortedPlayers.forEach(function(player, index) {
+			sortedPlayers.forEach(function(player) {
 				// score
-				var html = "<h2 class='player'>Player " + (index + 1) + "</h2>";
+				var html = "<h2 class='player'>" + player.name + "</h2>";
 				html += "<div class='scoreBoxContainer'>";
 				for (var i=0; i < player.score; i++) {
 					html += "<div class='scoreBox' style='background-color: " + player.color + ";'></div>";

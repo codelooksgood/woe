@@ -2,19 +2,21 @@
 "use strict";
 
 var id = 0;
-var randomColor = function() {
-	var r = Math.floor(Math.random() * 255);
-	var g = Math.floor(Math.random() * 255);
-	var b = Math.floor(Math.random() * 255);
-	return "rgb(" + r + "," + g + "," + b + ")";
+
+var elementColors = {
+	Fire: "rgb(255, 0, 0)",
+	Water: "rgb(0, 0, 255)",
+	Earth: "rgb(101, 67, 33)",
+	Air: "rgb(200, 200, 200)"
 };
 
-var Player = function(x, y) {
+var Player = function(x, y, name) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.id = id;
 	id++;
-	this.color = randomColor();
+	this.name = name;
+	this.color = elementColors[name];
 	this.score = 0;
 };
 

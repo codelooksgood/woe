@@ -1,9 +1,11 @@
 /* jshint node:true */
 "use strict";
 
+var Player = require("./player");
 var Target = require("./target");
 
 var NUMBER_OF_TARGETS = 5;
+var elementNames = ["Fire", "Water", "Earth", "Air"];
 
 var id = 1;
 var Room = function() {
@@ -13,6 +15,7 @@ var Room = function() {
 	this.targets = [];
 	this.hosts = [];
 	this.stopped = false;
+	this.elementNames = elementNames.slice();
 
 	this.tick();
 };
@@ -59,11 +62,19 @@ Room.prototype.numberOfPlayers = function() {
 	return Object.keys(this.players).length;
 };
 
+Room.prototype.newPlayer = function(player) {
+	var player = new Player(0, 0, this.elementNames.splice(0, 1)[0]);
+	this.addPlayer(player);
+
+	return player;
+};
+
 Room.prototype.addPlayer = function(player) {
 	this.players[player.id] = player;
 };
 
 Room.prototype.removePlayer = function(player) {
+	this.elementNames.push(player.name);
 	delete this.players[player.id];
 };
 
