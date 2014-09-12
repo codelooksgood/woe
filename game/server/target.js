@@ -17,7 +17,6 @@ var Target = function(x, y, room) {
 
 Target.new = function(room) {
 	var target = new Target(0, Math.random() * 0.6 + 0.2, room);
-	target.move();
 	room.addTarget(target);
 
 	return target;

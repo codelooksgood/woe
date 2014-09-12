@@ -46,7 +46,7 @@
 
 			var firesToRemove = [];
 			fires.forEach(function(fire) {
-				var radius = (Date.now() - fire.timestamp) / (2 * POINT_SIZE.WIDTH * canvas.width) + POINT_SIZE.WIDTH * canvas.width / 2;
+				var radius = (Date.now() - fire.timestamp) / (2 * POINT_SIZE * canvas.width) + POINT_SIZE * canvas.width / 2;
 				if (radius < 0) {
 					return;
 				}
@@ -79,7 +79,7 @@
 
 		sortedPoints.forEach(function(point) {
 			context.fillStyle = point.color;
-			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE.WIDTH * canvas.width, POINT_SIZE.HEIGHT * canvas.width);
+			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE * canvas.width, POINT_SIZE * canvas.width);
 		});
 
 		if (isPlayerInfoNew()) {

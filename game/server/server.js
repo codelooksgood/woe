@@ -9,11 +9,7 @@ var Point = require("./point");
 var Target = require("./target");
 
 // constants
-var POINT_SIZE = {
-	WIDTH: 0.025,
-	HEIGHT: 0.025
-};
-
+var POINT_SIZE = 0.025;
 var TARGET_RADIUS = 0.05;
 
 // variables
@@ -64,14 +60,14 @@ io.on("connection", function(socket) {
 			x = point.x - x;
 			y = point.y - y;
 
-			point.x = Math.min(Math.max(0, x), 1 - POINT_SIZE.WIDTH);
-			point.y = Math.min(Math.max(0, y), 1 - POINT_SIZE.HEIGHT);
+			point.x = Math.min(Math.max(0, x), 1 - POINT_SIZE);
+			point.y = Math.min(Math.max(0, y), 1 - POINT_SIZE);
 		});
 		socket.on("fire", function(id) {
 			room.points.forEach(function(point) {
 				if (point.id === id) {
-					var x = point.x + POINT_SIZE.WIDTH / 2;
-					var y = point.y + POINT_SIZE.HEIGHT / 2;
+					var x = point.x + POINT_SIZE / 2;
+					var y = point.y + POINT_SIZE / 2;
 					room.emitToHosts("fired", {
 						x: x,
 						y: y,
@@ -79,7 +75,7 @@ io.on("connection", function(socket) {
 						timestamp: new Date().getTime()
 					});
 					room.targets.forEach(function(target) {
-						if (TARGET_RADIUS + Math.sqrt(2 * Math.pow(POINT_SIZE.WIDTH / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
+						if (TARGET_RADIUS + Math.sqrt(2 * Math.pow(POINT_SIZE / 2, 2)) > Math.max(Math.abs(x - target.x), Math.abs(y - target.y))) {
 							point.score++;
 							if (point.score >= 10) {
 								room.updateHosts();
@@ -117,7 +113,6 @@ io.on("connection", function(socket) {
 				targetRadius: TARGET_RADIUS
 			});
 			room.hosts.push(socket);
-			room.lastActive = Date.now();
 		}
 
 		socket.on("reset", function() {
