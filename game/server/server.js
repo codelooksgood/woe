@@ -111,7 +111,9 @@ io.on("connection", function(socket) {
 			room.removeHost(socket);
 			if (room.hosts.length === 0) {
 				setTimeout(function() {
-					delete rooms[roomId];
+					if (room.hosts.length === 0) {
+						delete rooms[roomId];
+					}
 				}, 2000);
 			}
 		});
