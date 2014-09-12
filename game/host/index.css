@@ -40,7 +40,7 @@ button {
 
 .sidebar {
 	height: 100%;
-	width: 24%;
+	width: 25%;
 	text-align: center;
 	border-left: 1px solid black;
 }
@@ -68,13 +68,14 @@ button {
 	width: 90%;
 	height: 20px;
 	margin: auto;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
 .scoreBox {
-	width: 9%;
+	width: 10%;
 	height: 20px;
 	float: left;
-	border-right: 1px solid white;
 }
 
 .gamefield {
