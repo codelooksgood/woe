@@ -19,10 +19,10 @@
 	var lastFire = 0;
 
 	// socket.io
-	var socket = io();
+	var socket = window.io();
 
 	socket.on("connect", function() {
-		socket.emit("playerConnect", decodeURIComponent((new RegExp('[?|&]id=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null);
+		socket.emit("playerConnect", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20"))||null);
 	});
 
 	socket.on("playerInfo", function(player) {
@@ -30,12 +30,12 @@
 		document.body.style.backgroundColor = player.color;
 	});
 
-	socket.on("roomFull", function(id) {
+	socket.on("roomFull", function() {
 		window.alert("No slots available.");
 		window.history.back();
 	});
 
-	socket.on("noSuchRoom", function(id) {
+	socket.on("noSuchRoom", function() {
 		window.alert("This room doesn't exist anymore.");
 		window.history.back();
 	});
