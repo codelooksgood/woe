@@ -12,7 +12,7 @@
 			return room1.id > room2.id;
 		}).forEach(function(room) {
 			var openSlots = 4 - Object.keys(room.players).length;
-			roomsHTML += "<a href='player/player.html?id=" + room.id + "'><button " + (openSlots === 0 ? "disabled" : "") + ">Game " + room.id + " (" + openSlots + " open slots) </button></a>";
+			roomsHTML += "<a href='player/player.html?id=" + room.id + "'><button " + (openSlots === 0 ? "disabled" : "") + ">Room " + room.id + " (" + openSlots + " open slots) </button></a>";
 		});
 
 		document.getElementById("rooms").innerHTML += roomsHTML;

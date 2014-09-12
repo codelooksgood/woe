@@ -19,6 +19,7 @@
 	var TARGET_RADIUS = null;
 
 	// variables
+	var gameId = decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20")) || null;
 	var isGameRunning = true;
 	var canvas = document.getElementById("canvas");
 	var context = canvas.getContext("2d");
@@ -131,7 +132,7 @@
 	});
 
 	socket.on("connect", function() {
-		socket.emit("host", decodeURIComponent((new RegExp("[?|&]id=" + "([^&;]+?)(&|#|;|$)").exec(window.location.search)||[,""])[1].replace(/\+/g, "%20")) || null);
+		socket.emit("host", gameId);
 	});
 
 	socket.on("gameWon", function(player) {
@@ -155,5 +156,6 @@
 	}, false);
 
 	// initial draw
+	document.getElementById("gameId").innerHTML = "Room " + gameId;
 	draw();
 })();
