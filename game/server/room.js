@@ -97,9 +97,9 @@ Room.prototype.stop = function() {
 };
 
 Room.prototype.reset = function() {
-	this.players.forEach(function(player) {
-		player.score = 0;
-	});
+	for (var playerId in this.players) {
+		this.players[playerId].score = 0;
+	}
 	this.targets = [];
 	this.fill();
 	if (this.stopped) {
