@@ -19,6 +19,16 @@
 	var targets = [];
 	var fires = [];
 
+	var isPlayerInfoNew = function() {
+		var getHash = function(array) {
+			return JSON.stringify(array.map(function(el) {
+				return el.id + " " + el.score;
+			}));
+		};
+
+		return getHash(points) !== getHash(oldPoints);
+	};
+
 	// canvas
 	var resizeCanvas = function() {
 		var min = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
@@ -72,7 +82,7 @@
 			context.fillRect(point.x * canvas.width, point.y * canvas.height, POINT_SIZE.WIDTH * canvas.width, POINT_SIZE.HEIGHT * canvas.width);
 		});
 
-		if (JSON.stringify(points) !== JSON.stringify(oldPoints)) {
+		if (isPlayerInfoNew()) {
 			oldPoints = points;
 
 			if (points.length === 0) {
