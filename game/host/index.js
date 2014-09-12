@@ -32,8 +32,8 @@
 	// canvas
 	var resizeCanvas = function() {
 		var min = Math.min(canvas.parentElement.clientWidth, canvas.parentElement.clientHeight);
-		canvas.width = min;
-		canvas.height = min;
+		canvas.width = min - 20;
+		canvas.height = min - 20;
 	};
 	resizeCanvas();
 

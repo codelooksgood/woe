@@ -23,6 +23,10 @@ button {
 	text-decoration: none;
 }
 
+canvas {
+	border: 1px solid black;
+}
+
 .box {
 	display: -webkit-box;
 	-webkit-box-pack: center;
@@ -81,6 +85,6 @@ button {
 }
 
 .gamefield {
-	height: 95%;
+	height: 100%;
 	width: 74%;
 }
