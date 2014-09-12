@@ -28,10 +28,10 @@ canvas {
 }
 
 .box {
-	display: -webkit-box;
-	-webkit-box-pack: center;
-	-webkit-box-align: center;
-	-webkit-box-orient: vertical;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .left {
