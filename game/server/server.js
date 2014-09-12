@@ -18,7 +18,6 @@ var TARGET_RADIUS = 0.05;
 
 // variables
 var rooms = [];
-var inactiveRooms = [];
 
 // socket.io
 io.on("connection", function(socket) {
@@ -58,7 +57,6 @@ io.on("connection", function(socket) {
 
 		var point = new Point();
 		room.points.push(point);
-		room.lastActive = Date.now();
 
 		console.log("[server.js: 132]\n   ", "client connected to room", room.id);
 
