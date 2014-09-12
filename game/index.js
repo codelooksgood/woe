@@ -12,23 +12,15 @@
 			return room1.id > room2.id;
 		}).forEach(function(room) {
 			var openSlots = 4 - room.points.length;
-			roomsHTML += "<button id=" + room.id + " " + (openSlots === 0 ? "disabled" : "") + ">Game " + room.id + " (" + openSlots + " open slots)" + "</room>";
+			roomsHTML += "<a href='client/index.html?id=" + room.id + "'><button " + (openSlots === 0 ? "disabled" : "") + ">Game " + room.id + " (" + openSlots + " open slots) </button></a>";
 		});
 
-		document.getElementById("index").innerHTML += roomsHTML;
+		document.getElementById("rooms").innerHTML += roomsHTML;
 	});
 
-	document.addEventListener("click", function(event) {
-		if (event.target.tagName === "BUTTON") {
-			if (event.target.id === "newRoom") {
-				socket.emit("newRoom");
-			}
-			// existing room
-			else {
-				window.location.href += "client/index.html?id=" + event.target.id;
-			}
-		}
-	});
+	document.getElementById("newRoom").addEventListener("click", function() {
+		socket.emit("newRoom");
+	}, false);
 
 	socket.emit("requestCurrentRooms");
 })();
