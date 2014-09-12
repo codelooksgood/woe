@@ -41,6 +41,13 @@ Room.prototype.addTarget = function(target) {
 	this.targets.push(target);
 };
 
+Room.prototype.removeTarget = function(target) {
+	var targetIndex = this.targets.indexOf(target);
+	if (targetIndex > -1) {
+		this.targets.splice(targetIndex, 1);
+	}
+};
+
 Room.prototype.numberOfPlayers = function() {
 	return Object.keys(this.players).length;
 };
@@ -76,11 +83,8 @@ Room.prototype.tick = function() {
 		this.targets.forEach(function(target) {
 			target.move();
 			if (target.x > 1) {
-				var index = this.targets.indexOf(target);
-				if (index >= 0) {
-					this.targets.splice(index, 1);
-					this.newTarget();
-				}
+				this.removeTarget(target);
+				this.newTarget();
 			}
 		}, this);
 		this.updateHosts();

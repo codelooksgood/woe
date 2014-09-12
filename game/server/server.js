@@ -10,6 +10,7 @@ var Target = require("./target");
 
 // variables
 var rooms = {};
+var NUMBER_OF_PLAYERS = 4;
 
 // socket.io
 io.on("connection", function(socket) {
@@ -40,8 +41,7 @@ io.on("connection", function(socket) {
 			return;
 		}
 
-		// TODO: 4 should be const
-		if (room.numberOfPlayers() >= 4) {
+		if (room.numberOfPlayers() >= NUMBER_OF_PLAYERS) {
 			socket.emit("roomFull");
 			return;
 		}
@@ -77,8 +77,7 @@ io.on("connection", function(socket) {
 						room.emitToHosts("gameWon", player);
 						room.stop();
 					}
-					// TODO: room.removeTarget(target);
-					room.targets.splice(room.targets.indexOf(target), 1);
+					room.removeTarget(target);
 					setTimeout(room.newTarget.bind(room), 2000);
 				}
 			});
