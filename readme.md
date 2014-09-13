@@ -2,6 +2,9 @@
 
 JS13kGames 2014 entry http://js13kgames.com/
 
+## Link
+http://js13kgames.com/entries/woe-war-of-elements
+
 ## Description
 
 Invite your friends, create a room with your desktop computer and join it with your mobile phones.
