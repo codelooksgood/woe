@@ -18,6 +18,3 @@ To read more about the concept follow [this blog post](http://www.codelooksgood.
 ## Development Details
 
 Tested with latest Chrome, Safari and Firefox for Desktop, iOS7 and Android 4.4 for mobile.
-
-## Bugs
-* the winner screen refenrences the winner as Player N instead of it's element name
